@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perf Test Target</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .endpoint-row {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.15s;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .endpoint-row:last-child { border-bottom: none; }
+
+        .endpoint-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .endpoint-method {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            min-width: 52px;
+            text-align: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .method-get  { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .method-post { background: rgba(59,130,246,0.15); color: #3b82f6; }
+
+        .endpoint-path {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+        }
+
+        .endpoint-response {
+            margin-left: auto;
+            padding-left: 1rem;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.75rem;
+            color: #475569;
+        }
+
+        .category {
+            margin-bottom: 1.5rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .category-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-server   { background: #22d3ee; }
+
+        .category-header h2 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-bar {
+            margin-top: 2rem;
+            text-align: center;
+            color: #475569;
+            font-size: 0.8rem;
+        }
+
+        .status-bar .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 0.4rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Perf Test Target</h1>
+            <p>API endpoints &amp; request statistics</p>
+        </header>
+
+        <div class="category">
+            <div class="category-header">
+                <div class="category-dot dot-server"></div>
+                <h2>API Endpoints</h2>
+            </div>
+            <div class="card">
+                <a class="endpoint-row" href="/users">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/users</span>
+                    <span class="endpoint-response">application/json</span>
+                </a>
+                <a class="endpoint-row" href="/users" onclick="event.preventDefault(); fetch('/users',{method:'POST'}).then(r=>r.json()).then(d=>alert(JSON.stringify(d,null,2)))">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/users</span>
+                    <span class="endpoint-response">application/json</span>
+                </a>
+                <a class="endpoint-row" href="/tasks">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/tasks</span>
+                    <span class="endpoint-response">application/json</span>
+                </a>
+                <a class="endpoint-row" href="/documents">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/documents</span>
+                    <span class="endpoint-response">application/json</span>
+                </a>
+                <a class="endpoint-row" href="/documents" onclick="event.preventDefault(); fetch('/documents',{method:'POST'}).then(r=>r.json()).then(d=>alert(JSON.stringify(d,null,2)))">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/documents</span>
+                    <span class="endpoint-response">application/json</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span class="dot"></span> Application running
+        </div>
+
+        <!-- Endpoint Request Stats -->
+        <div class="category" style="margin-top: 2rem;">
+            <div class="category-header">
+                <div class="category-dot dot-server"></div>
+                <h2>Endpoint Request Stats</h2>
+            </div>
+            <div class="card" style="padding: 1.5rem;">
+                <canvas id="statsChart" height="260"></canvas>
+                <p id="statsEmpty" style="text-align:center; color:#475569; display:none;">No requests recorded yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+        const COLORS = [
+            '#3b82f6','#22d3ee','#a78bfa','#f472b6','#f59e0b',
+            '#22c55e','#ef4444','#6366f1','#14b8a6','#e879f9'
+        ];
+
+        let chart = null;
+
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                renderChart(data);
+            } catch (e) {
+                console.error('Failed to fetch stats:', e);
+            }
+        }
+
+        function renderChart(data) {
+            const labels = [];
+            const values = [];
+
+            for (const [method, paths] of Object.entries(data)) {
+                for (const [path, count] of Object.entries(paths)) {
+                    if (method === 'GET' && path === '/') continue;
+                    labels.push(method + ' ' + path);
+                    values.push(count);
+                }
+            }
+
+            document.getElementById('statsEmpty').style.display = labels.length === 0 ? 'block' : 'none';
+
+            if (labels.length === 0) {
+                if (chart) { chart.destroy(); chart = null; }
+                return;
+            }
+
+            const colors = labels.map((_, i) => COLORS[i % COLORS.length]);
+
+            if (chart) {
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = values;
+                chart.data.datasets[0].backgroundColor = colors;
+                chart.update();
+                return;
+            }
+
+            chart = new Chart(document.getElementById('statsChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Requests',
+                        data: values,
+                        backgroundColor: colors,
+                        borderRadius: 6,
+                        maxBarThickness: 60
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#e2e8f0',
+                            bodyColor: '#e2e8f0',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8', font: { family: "'SF Mono','Fira Code',monospace", size: 11 } },
+                            grid: { color: 'rgba(255,255,255,0.04)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#94a3b8', precision: 0 },
+                            grid: { color: 'rgba(255,255,255,0.04)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchStats();
+        setInterval(fetchStats, 3000);
+    </script></body>
+</html>
