@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: rogierlommers/perftest
+  IMAGE_NAME: rogierlommers/perftest-target
 
 jobs:
   build-and-push:
