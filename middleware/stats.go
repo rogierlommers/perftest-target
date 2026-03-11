@@ -28,6 +28,11 @@ func RequestCounter() gin.HandlerFunc {
 			return
 		}
 
+		if path == "/health" {
+			c.Next()
+			return
+		}
+
 		mu.Lock()
 		if requestCounts[method] == nil {
 			requestCounts[method] = make(map[string]int64)

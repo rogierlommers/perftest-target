@@ -14,14 +14,9 @@ A lightweight Go web application designed as a target for performance testing. I
 | GET    | `/tasks`      | List tasks                   |
 | GET    | `/documents`  | List documents               |
 | POST   | `/documents`  | Create a document            |
+| GET    | `/stress/cpu` | CPU stress demo endpoint     |
 | GET    | `/health`     | Health check                 |
 | GET    | `/api/stats`  | Per-endpoint request counts  |
-
-## Prerequisites
-
-- Go 1.25+
-- Docker (optional, for containerised builds)
-- [Vegeta](https://github.com/tsenart/vegeta) (optional, for load testing)
 
 ## Configuration
 
@@ -39,44 +34,40 @@ The app reads environment variables from a `.env` file (via [godotenv](https://g
 echo 'HTTP_BIND_ADDR="0.0.0.0:3000"' > .env
 echo 'LOGLEVEL="debug"' >> .env
 
-# run directly
+# run directly (assumes that you have Go installed)
 ./run-dev.sh
-```
-
-## Docker
-
-```bash
-# build
-docker build -t rogierlommers/perftest .
-
-# run
-docker run -p 3000:3000 \
-  -e HTTP_BIND_ADDR="0.0.0.0:3000" \
-  -e LOGLEVEL="info" \
-  rogierlommers/perftest
-```
-
-Or use the convenience script:
-
-```bash
-./build-and-push.sh
 ```
 
 ## Load testing
 
-A [Vegeta](https://github.com/tsenart/vegeta)-based load test script is included:
+First start the perftest-target application. By default it binds to 0.0.0.0:3000.
+Then start the locust tests. The repo comes with two locustfiles:
 
-```bash
-# install vegeta (macOS)
-brew install vegeta
+### locustfile-without-stress.py
 
-# run all endpoint attacks in parallel for 30 s
-./loadtest.sh
+Runs a performance test to the following endpoints:
+
+```
+locust -f locustfile-without-stress.py --host=http://localhost:3000
 ```
 
-Results (text reports and latency histograms) are written to `vegeta-results/`.
+  - GET /users
+  - GET /tasks
+  - GET /documents
+  - POST /users
+  - POST documents
 
-## CI/CD
 
-- **GitHub Actions** — `.github/workflows/build-and-push.yaml` builds and pushes the Docker image to Docker Hub on every push to `main`.
-- **Azure DevOps** — `devops-pipeline/pipeline.yaml` builds, pushes, and deploys to Azure Container Apps.
+### locustfile-with-stress.py
+Runs a performance test to the following endpoints: Please note, this includes the GET /stress/cpu endpoint, that emulates heavy cpu load. You can use this to demonstrate what such endpoints do with the total behaviour of the application.
+
+```
+locust -f locustfile-with-stress.py --host=http://localhost:3000
+```
+
+  - GET /users
+  - GET /tasks
+  - GET /documents
+  - POST /users
+  - POST documents
+  - GET /stress/cpu

@@ -1,9 +1,12 @@
 #!/bin/bash
 
-echo "Building Docker image..."
-docker build -t rogierlommers/perftest .
+set -euo pipefail
 
-echo "Pushing Docker image to registry..."
-docker push rogierlommers/perftest
+IMAGE="rogierlommers/perftest"
+PLATFORM="linux/amd64"
+TAG="$(date +"%Y-%m-%d-%H%M")"
 
-echo "Done!"
+echo "Building and pushing Docker image ${IMAGE}:${TAG} for ${PLATFORM}..."
+docker buildx build --platform "${PLATFORM}" -t "${IMAGE}:${TAG}" --push .
+
+echo "Done! Pushed ${IMAGE}:${TAG}"

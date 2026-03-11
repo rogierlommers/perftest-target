@@ -3,7 +3,9 @@ package router
 import (
 	"net/http"
 	"perftest-target/middleware"
+
 	"perftest-target/web/app/documents"
+	"perftest-target/web/app/stress"
 	"perftest-target/web/app/tasks"
 	"perftest-target/web/app/users"
 
@@ -36,6 +38,7 @@ func New() *gin.Engine {
 	router.GET("/tasks", tasks.GETTasks)
 	router.GET("/documents", documents.GETDocuments)
 	router.POST("/documents", documents.POSTDocuments)
+	router.GET("/stress/cpu", stress.GETCPUStress)
 	router.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})

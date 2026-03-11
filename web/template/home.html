@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perf Test Target</title>
+    <title>Perftest-target</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -121,6 +121,29 @@
             backdrop-filter: blur(10px);
         }
 
+        .stats-card {
+            padding: 1rem;
+            height: 220px;
+            position: relative;
+        }
+
+        #statsChart {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        #statsEmpty {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #475569;
+            pointer-events: none;
+        }
+
         .status-bar {
             margin-top: 2rem;
             text-align: center;
@@ -149,42 +172,8 @@
     <div class="container">
         <header>
             <h1>Perf Test Target</h1>
-            <p>API endpoints &amp; request statistics</p>
+            <p>Request statistics dashboard</p>
         </header>
-
-        <div class="category">
-            <div class="category-header">
-                <div class="category-dot dot-server"></div>
-                <h2>API Endpoints</h2>
-            </div>
-            <div class="card">
-                <a class="endpoint-row" href="/users">
-                    <span class="endpoint-method method-get">GET</span>
-                    <span class="endpoint-path">/users</span>
-                    <span class="endpoint-response">application/json</span>
-                </a>
-                <a class="endpoint-row" href="/users" onclick="event.preventDefault(); fetch('/users',{method:'POST'}).then(r=>r.json()).then(d=>alert(JSON.stringify(d,null,2)))">
-                    <span class="endpoint-method method-post">POST</span>
-                    <span class="endpoint-path">/users</span>
-                    <span class="endpoint-response">application/json</span>
-                </a>
-                <a class="endpoint-row" href="/tasks">
-                    <span class="endpoint-method method-get">GET</span>
-                    <span class="endpoint-path">/tasks</span>
-                    <span class="endpoint-response">application/json</span>
-                </a>
-                <a class="endpoint-row" href="/documents">
-                    <span class="endpoint-method method-get">GET</span>
-                    <span class="endpoint-path">/documents</span>
-                    <span class="endpoint-response">application/json</span>
-                </a>
-                <a class="endpoint-row" href="/documents" onclick="event.preventDefault(); fetch('/documents',{method:'POST'}).then(r=>r.json()).then(d=>alert(JSON.stringify(d,null,2)))">
-                    <span class="endpoint-method method-post">POST</span>
-                    <span class="endpoint-path">/documents</span>
-                    <span class="endpoint-response">application/json</span>
-                </a>
-            </div>
-        </div>
 
         <div class="status-bar">
             <span class="dot"></span> Application running
@@ -196,9 +185,49 @@
                 <div class="category-dot dot-server"></div>
                 <h2>Endpoint Request Stats</h2>
             </div>
-            <div class="card" style="padding: 1.5rem;">
-                <canvas id="statsChart" height="260"></canvas>
-                <p id="statsEmpty" style="text-align:center; color:#475569; display:none;">No requests recorded yet.</p>
+            <div class="card stats-card">
+                <canvas id="statsChart"></canvas>
+                <p id="statsEmpty">No requests recorded yet.</p>
+            </div>
+        </div>
+
+        <!-- Endpoint Links -->
+        <div class="category" style="margin-top: 1.5rem;">
+            <div class="category-header">
+                <div class="category-dot dot-server"></div>
+                <h2>All Endpoints</h2>
+            </div>
+            <div class="card">
+                <a class="endpoint-row" href="/users" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/users</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
+                <a class="endpoint-row" href="/tasks" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/tasks</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
+                <a class="endpoint-row" href="/documents" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/documents</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
+                <a class="endpoint-row" href="/stress/cpu" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/stress/cpu</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
+                <a class="endpoint-row" href="/users" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/users</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
+                <a class="endpoint-row" href="/documents" target="_blank" rel="noopener noreferrer">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/documents</span>
+                    <span class="endpoint-response">Open</span>
+                </a>
             </div>
         </div>
     </div>
@@ -234,7 +263,7 @@
                 }
             }
 
-            document.getElementById('statsEmpty').style.display = labels.length === 0 ? 'block' : 'none';
+            document.getElementById('statsEmpty').style.display = labels.length === 0 ? 'flex' : 'none';
 
             if (labels.length === 0) {
                 if (chart) { chart.destroy(); chart = null; }
@@ -265,6 +294,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
