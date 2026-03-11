@@ -7,6 +7,8 @@ How to run:
 docker run -p 3000:3000 rogierlommers/perftest-target:latest
 ```
 
+([link to dockerhub](https://hub.docker.com/r/rogierlommers/perftest-target/tags))
+
 ![Screenshot](screenshot.png)
 
 ## Endpoints
@@ -48,32 +50,3 @@ echo 'LOGLEVEL="debug"' >> .env
 
 First start the perftest-target application. By default it binds to 0.0.0.0:3000.
 Then start the locust tests. The repo comes with two locustfiles:
-
-### locustfile-without-stress.py
-
-Runs a performance test to the following endpoints:
-
-```
-locust -f locustfile-without-stress.py --host=http://localhost:3000
-```
-
-  - GET /users
-  - GET /tasks
-  - GET /documents
-  - POST /users
-  - POST documents
-
-
-### locustfile-with-stress.py
-Runs a performance test to the following endpoints: Please note, this includes the GET /stress/cpu endpoint, that emulates heavy cpu load. You can use this to demonstrate what such endpoints do with the total behaviour of the application.
-
-```
-locust -f locustfile-with-stress.py --host=http://localhost:3000
-```
-
-  - GET /users
-  - GET /tasks
-  - GET /documents
-  - POST /users
-  - POST documents
-  - GET /stress/cpu
