@@ -4,6 +4,7 @@ import time
 from locust import HttpUser, between, events, task
 
 STRESS_START_AFTER_SECONDS = int(os.getenv("STRESS_START_AFTER_SECONDS", "120"))
+STRESS_STOP_AFTER_SECONDS = int(os.getenv("STRESS_STOP_AFTER_SECONDS", "240"))
 TEST_START_MONO = None
 
 
@@ -72,7 +73,12 @@ class PerfTestUser(HttpUser):
         if TEST_START_MONO is None:
             return
 
-        if time.monotonic() - TEST_START_MONO < STRESS_START_AFTER_SECONDS:
+        elapsed_seconds = time.monotonic() - TEST_START_MONO
+
+        if elapsed_seconds < STRESS_START_AFTER_SECONDS:
+            return
+
+        if elapsed_seconds >= STRESS_STOP_AFTER_SECONDS:
             return
 
         # Aggressive stress-demo mode: hit CPU burn endpoint frequently and harder.
