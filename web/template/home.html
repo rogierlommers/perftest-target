@@ -268,6 +268,35 @@
             '#22c55e','#ef4444','#6366f1','#14b8a6','#e879f9'
         ];
 
+        const barValueLabels = {
+            id: 'barValueLabels',
+            afterDatasetsDraw(chart) {
+                const { ctx } = chart;
+                const meta = chart.getDatasetMeta(0);
+                const dataset = chart.data.datasets[0];
+
+                if (!meta || !dataset || !dataset.data) {
+                    return;
+                }
+
+                ctx.save();
+                ctx.fillStyle = '#cbd5e1';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.font = "600 11px 'SF Mono','Fira Code',monospace";
+
+                meta.data.forEach((bar, index) => {
+                    const value = dataset.data[index];
+                    if (value === null || value === undefined) {
+                        return;
+                    }
+                    ctx.fillText(String(value), bar.x, bar.y - 4);
+                });
+
+                ctx.restore();
+            }
+        };
+
         let chart = null;
 
         async function clearStats() {
@@ -332,6 +361,7 @@
 
             chart = new Chart(document.getElementById('statsChart'), {
                 type: 'bar',
+                plugins: [barValueLabels],
                 data: {
                     labels: labels,
                     datasets: [{
@@ -362,6 +392,7 @@
                         },
                         y: {
                             beginAtZero: true,
+                            grace: '10%',
                             ticks: { color: '#94a3b8', precision: 0 },
                             grid: { color: 'rgba(255,255,255,0.04)' }
                         }
@@ -371,7 +402,7 @@
         }
 
         fetchStats();
-        setInterval(fetchStats, 500);
+        setInterval(fetchStats, 2000);
         document.getElementById('clearStatsBtn').addEventListener('click', clearStats);
     </script></body>
 </html>

@@ -1,6 +1,22 @@
 import os
 import random
-from locust import HttpUser, between, task
+import time
+from locust import HttpUser, between, events, task
+
+STRESS_START_AFTER_SECONDS = int(os.getenv("STRESS_START_AFTER_SECONDS", "120"))
+TEST_START_MONO = None
+
+
+@events.test_start.add_listener
+def on_test_start(environment, **kwargs):
+    global TEST_START_MONO
+    TEST_START_MONO = time.monotonic()
+
+
+@events.test_stop.add_listener
+def on_test_stop(environment, **kwargs):
+    global TEST_START_MONO
+    TEST_START_MONO = None
 
 
 class PerfTestUser(HttpUser):
@@ -53,6 +69,12 @@ class PerfTestUser(HttpUser):
 
     @task(12)
     def get_stress_cpu(self):
+        if TEST_START_MONO is None:
+            return
+
+        if time.monotonic() - TEST_START_MONO < STRESS_START_AFTER_SECONDS:
+            return
+
         # Aggressive stress-demo mode: hit CPU burn endpoint frequently and harder.
         path = "/stress/cpu?duration_ms=2000&workers=8"
         with self.client.get(path, name="GET /stress/cpu", catch_response=True) as response:
