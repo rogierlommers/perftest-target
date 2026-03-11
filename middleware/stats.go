@@ -23,7 +23,7 @@ func RequestCounter() gin.HandlerFunc {
 			path = c.Request.URL.Path
 		}
 
-		if strings.HasPrefix(path, "/api/stats") {
+		if strings.HasPrefix(path, "/api/stats") || path == "/api/clear-stats" {
 			c.Next()
 			return
 		}
@@ -56,4 +56,11 @@ func GetRequestCounts() map[string]map[string]int64 {
 	}
 
 	return snapshot
+}
+
+// ClearRequestCounts resets all request statistics.
+func ClearRequestCounts() {
+	mu.Lock()
+	defer mu.Unlock()
+	clear(requestCounts)
 }

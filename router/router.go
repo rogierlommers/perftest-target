@@ -48,5 +48,11 @@ func New() *gin.Engine {
 		ctx.JSON(http.StatusOK, middleware.GetRequestCounts())
 	})
 
+	// endpoint to clear stats
+	router.POST("/api/clear-stats", func(ctx *gin.Context) {
+		middleware.ClearRequestCounts()
+		ctx.JSON(http.StatusOK, gin.H{"status": "cleared"})
+	})
+
 	return router
 }

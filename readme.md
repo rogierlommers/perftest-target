@@ -2,21 +2,27 @@
 
 A lightweight Go web application designed as a target for performance testing. It exposes several HTTP endpoints and tracks per-endpoint request counts in real time via a built-in dashboard.
 
+How to run:
+```
+docker run -p 3000:3000 rogierlommers/perftest-target:latest
+```
+
 ![Screenshot](screenshot.png)
 
 ## Endpoints
 
-| Method | Path          | Description                  |
-|--------|---------------|------------------------------|
-| GET    | `/`           | Dashboard (HTML)             |
-| GET    | `/users`      | List users                   |
-| POST   | `/users`      | Create a user                |
-| GET    | `/tasks`      | List tasks                   |
-| GET    | `/documents`  | List documents               |
-| POST   | `/documents`  | Create a document            |
-| GET    | `/stress/cpu` | CPU stress demo endpoint     |
-| GET    | `/health`     | Health check                 |
-| GET    | `/api/stats`  | Per-endpoint request counts  |
+| Method | Path               | Description                  |
+|--------|--------------------|------------------------------|
+| GET    | `/`                | Dashboard (HTML)             |
+| GET    | `/users`           | List users                   |
+| POST   | `/users`           | Create a user                |
+| GET    | `/tasks`           | List tasks                   |
+| GET    | `/documents`       | List documents               |
+| POST   | `/documents`       | Create a document            |
+| GET    | `/stress/cpu`      | CPU stress demo endpoint     |
+| GET    | `/health`          | Health check                 |
+| GET    | `/api/stats`       | Per-endpoint request counts  |
+| GET    | `/api/clear-stats` | Clear all stats              |
 
 ## Configuration
 
